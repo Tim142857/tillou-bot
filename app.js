@@ -61,3 +61,35 @@ client
       error.message
     );
   });
+
+setTimeout(async function () {
+  try {
+    const url =
+      "https://openloot.com/marketplace?gameId=56a149cf-f146-487a-8a1c-58dc9ff3a15c&tag=NFT.Workshop.TimeWarden";
+
+    // Effectuez une requête HTTP pour récupérer le contenu de la page
+    const response = await axios.get(url);
+
+    // Comptez le nombre de fois que "TimeWarden" apparaît dans le contenu de la page
+    const count = (response.data.match(/TimeWarden/gi) || []).length;
+
+    // Envoyez le résultat sur le serveur Discord
+    const resultMessage = `Le nombre de fois que 'TimeWarden' est affiché sur la page est : ${count}`;
+    const channel = client.channels.cache.get(channelId);
+
+    if (channel) {
+      channel.send(resultMessage);
+      console.log("Résultat envoyé avec succès.");
+    } else {
+      console.error(`Le canal avec l'ID ${channelId} n'a pas été trouvé.`);
+    }
+  } catch (error) {
+    console.error(
+      "Une erreur s'est produite lors de la récupération de la page :",
+      error.message
+    );
+    message.channel.send(
+      "Une erreur s'est produite lors de la récupération de la page."
+    );
+  }
+}, 10000);
